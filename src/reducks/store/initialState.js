@@ -1,20 +1,16 @@
 const initialState = {
   users: {
-    cart: [],
     isSignedIn: false,
-    role:"",
-    uid: "",
-    username: "",
-    orders: []
+    type: '',
+    uid: '',
+    username: ''
   },
-  products: {
-    list:[]
+  ranking: {
+    title: '',
+    explan: '',
+    item: [],
+    id: ''
   }
-};
+}
 
 export default initialState
-
-/*
- [ソースコード概略]
-ユーザー情報,商品情報の初期情報
- */

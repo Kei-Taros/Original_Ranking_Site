@@ -1,17 +1,14 @@
-import React from "react"
+import React from 'react'
 import Router from './Router'
-import "./assets/style.css"
-
 
 const App = () => {
-
   return (
     <>
-      <main className="c-main">
+      <main>
         <Router />
       </main>
     </>
-  );
+  )
 }
 
-export default App;
+export default App

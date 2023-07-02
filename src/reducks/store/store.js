@@ -1,33 +1,27 @@
-import { connectRouter,routerMiddleware } from 'connected-react-router';
+import { connectRouter, routerMiddleware } from 'connected-react-router'
 import {
-  createStore as reduxCreateStore,
   applyMiddleware,
-  combineReducers
-} from 'redux';
-import thunk from 'redux-thunk';
-import { UsersReducer } from "../users/reducers";
-import { ProductsReducer } from "../products/reducers";
-import { createLogger } from 'redux-logger';
+  combineReducers,
+  createStore as reduxCreateStore
+} from 'redux'
+import thunk from 'redux-thunk'//非同期処理のために追加
+import counterReducer from '../calcsys/reducers'
+import rankingReducer from '../ranking/reducers'
+import usersReducer from '../users/reducers'
 
-function createStore(history) {
-  //Actionの発火をログに表示させる
-  const logger = createLogger({
-    collapsed: true,
-    diff:true
-  });
-
+const createStore = (history) => {
   return reduxCreateStore(
     combineReducers({
       router: connectRouter(history),
-      users: UsersReducer,
-      products:ProductsReducer
+      count: counterReducer,
+      users: usersReducer,
+      ranking: rankingReducer
     }),
     applyMiddleware(
-      logger,
       routerMiddleware(history),
-      //非同期操作をするために必要
       thunk
     )
   )
 }
-export default createStore;
+
+export default createStore
