@@ -4,24 +4,20 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import { useDispatch } from 'react-redux'
 import { useState, useCallback } from 'react'
-import { signInSystem } from '../reducks/users/operations'
+import { pwResetSystem } from '../reducks/users/operations'
 
-const SignIn = () => {
+const PwReset = () => {
   const dispatch = useDispatch()
-  const [email, setEmail] = useState(''),
-        [password, setPassword] = useState('')
+  const [email, setEmail] = useState('')
 
   const inputEmail = useCallback((event) => {
     setEmail(event.target.value)
-  }, [setEmail])
-  const inputPassword = useCallback((event) => {
-    setPassword(event.target.value)
   }, [setEmail])
 
   return (
     <div>
       <h1>
-        SignIn
+        Password Reset
       </h1>
       <div>
         <TextField
@@ -33,33 +29,22 @@ const SignIn = () => {
       </div>
       <br />
       <div>
-        <TextField
-          label={'Password'}
-          value={password}
-          onChange={inputPassword}
-          type={"password"}
-        />
-      </div>
-      <br />
-      <div>
         <Button
           variant="outlined"
-          label={'Sign In'}
+          label={'Password Reset'}
           onClick={() => {
-            dispatch(signInSystem(email, password));
+            dispatch(pwResetSystem(email));
           }}
         >
-          Sign In
+          Password Reset
         </Button>
       </div>
-      
+      <br />
+      SignIn to <Link to={`/signin`}>this.</Link>
       <br />
       SignUp to <Link to={`/signup`}>this.</Link>
-      <br />
-      Click here <Link to={`/signin/reset`}> password reset.</Link>
-      
     </div>
   )
 }
 
-export default SignIn;
+export default PwReset;

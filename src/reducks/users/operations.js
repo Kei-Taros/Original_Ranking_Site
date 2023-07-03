@@ -5,11 +5,11 @@ import { signInAction, signOutAction } from './action';
 export const signUpSystem = (username, email, password, confirmPassword, invitationCode) => {
   return async (dispatch) => {
     if (username === '' || email === '' || password === '' || confirmPassword === '') {
-      alert('Enter Miss')
+      alert('Input Error')
       return false
     }
     if (password !== confirmPassword) {
-      alert('Password Enter Miss')
+      alert('Password Input Error')
       return false
     }
 
@@ -53,7 +53,7 @@ export const signUpSystem = (username, email, password, confirmPassword, invitat
 export const signInSystem = (email, password) => {
   return async (dispatch) => {
     if (email === '' || password === '') {
-      alert('Enter Miss')
+      alert('Input Error')
       return false
     }
     auth.signInWithEmailAndPassword(email, password)
@@ -64,12 +64,12 @@ export const signInSystem = (email, password) => {
           const uid = user.uid
           db.collection('userData').doc(uid).get()
             .then(getUser => {
-              const data = getUser.data()
+              const udata = getUser.data()
 
               dispatch(signInAction({
-                type: data.type,
+                type: udata.type,
                 uid: uid,
-                username: data.username
+                username: udata.username
               }))
               dispatch(push('/'));
             })
@@ -86,6 +86,47 @@ export const signOutSystem = () => {
       .then(() => {
         dispatch(signOutAction())
         dispatch(push('/'))
+      })
+  }
+}
+
+export const listenAuthState = () => {
+  return async (dispatch) => {
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        const uid = user.uid
+        db.collection('userData').doc(uid).get()
+          .then(snapshot => {
+            const udata = snapshot.data()
+
+            dispatch(signInAction({
+              type: udata.type,
+              uid: uid,
+              username: udata.username
+            }))
+          })
+      }
+      else {
+        dispatch(push('/signin'))
+      }
+    })
+  }
+}
+
+export const pwResetSystem = (email) => {
+  return async (dispatch) => {
+    if (email === '') {
+      alert('Input Error')
+      return false
+    }
+
+    auth.sendPasswordResetEmail(email)
+      .then(() => {
+        alert('Send password reset to email')
+        dispatch(push('/signin'))
+      })
+      .catch(() => {
+        alert('Failure')
       })
   }
 }

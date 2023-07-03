@@ -5,14 +5,27 @@ import Button from '@material-ui/core/Button'
 import { Link } from 'react-router-dom'
 import { push } from 'connected-react-router'
 import { saveRanking } from '../reducks/ranking/operations'
+import { getExplan, getItem, getTitle } from '../reducks/ranking/selectors'
 
 const ConfirmCreateForm = (props) => {
   const dispatch = useDispatch()
 
-  const confirmData = useSelector((state) => state.ranking)
-  const confirmTitle = confirmData.title
-  const confirmExplan = confirmData.explan
-  const confirmItem = confirmData.item
+  const selector = useSelector((state) => state)
+  const confirmTitle = getTitle(selector)
+  const confirmExplan = getExplan(selector)
+  const confirmItem = getItem(selector)
+
+  /*
+  window.addEventListener('load', () => {
+    console.log('relod2')
+    const perfEntries = performance.getEntriesByType("navigation");
+    if (perfEntries[0].type === 'reload') {
+      console.log('relod')
+      dispatch(push('/ranking/createform'))
+    }
+  });
+  */
+
 
   return (
     <div>
@@ -38,7 +51,7 @@ const ConfirmCreateForm = (props) => {
         <Button
           variant="outlined"
           onClick={() => {
-            dispatch(saveRanking(confirmData))
+            dispatch(saveRanking())
           }}>
           SAVE
         </Button>

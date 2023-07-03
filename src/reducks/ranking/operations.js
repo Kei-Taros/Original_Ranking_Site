@@ -29,14 +29,17 @@ export const createRanking = (title, explan, item, id) => {
   }
 }
 
-export const saveRanking = (confirmData) => {
+export const saveRanking = () => {
   return async (dispatch, getState) => {
+    const state = getState()
+    const rankigState = state.ranking
+
     const timestamp = FirebaseTimestamp.now()
-    confirmData.created_at = timestamp
+    rankigState.created_at = timestamp
 
-    const id = confirmData.id
+    const id = rankigState.id
 
-    return rankingRef.doc(id).set(confirmData)
+    return rankingRef.doc(id).set(rankigState)
       .then(() => {
         const resetData = initialState.ranking
         dispatch(resetRankingAction(resetData))

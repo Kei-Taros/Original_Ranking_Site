@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import { push } from 'connected-react-router'
 import { ConfirmCreateForm } from '../components/index'
 import { createRanking } from '../reducks/ranking/operations'
+import { getExplan, getId, getItem, getTitle } from '../reducks/ranking/selectors'
 
 const RankingCreateForm = () => {
   const dispatch = useDispatch()
@@ -13,11 +14,6 @@ const RankingCreateForm = () => {
   const [title, setTitle] = useState(''),
         [explan, setExplan] = useState(''),
         [item, setItem] = useState([])
-
-  const id = useSelector((state) => state.ranking.id)
-  const confirmTitle = useSelector((state) => state.ranking.title)
-  const confirmExplan = useSelector((state) => state.ranking.explan)
-  const confirmItem = useSelector((state) => state.ranking.item)
 
   const inputTitle = useCallback((event) => {
     setTitle(event.target.value)
@@ -29,6 +25,12 @@ const RankingCreateForm = () => {
     setItem(event.target.value)
   }, [setItem])
 
+  const selector = useSelector((state) => state)
+  const id = getId(selector)
+  const confirmTitle = getTitle(selector)
+  const confirmExplan = getExplan(selector)
+  const confirmItem = getItem(selector)
+
   useEffect(() => {
     if (id !== '') {
       setTitle(confirmTitle)
@@ -36,7 +38,6 @@ const RankingCreateForm = () => {
       setItem(confirmItem)
     }
   },[id])
-
 
   return (
     <div>

@@ -90,7 +90,7 @@ const SignUp = () => {
       </div>
       
       <br />
-      Home to <Link to={`/`}>this.</Link>
+      SignIn to <Link to={`/signin`}>this.</Link>
       
     </div>
   )
