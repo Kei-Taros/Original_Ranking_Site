@@ -7,8 +7,10 @@ import { push } from 'connected-react-router'
 import { ConfirmCreateForm } from '../components/index'
 import { createRanking } from '../reducks/ranking/operations'
 import { getExplan, getId, getItem, getTitle } from '../reducks/ranking/selectors'
+import RankingItemForm from '../components/RankingItemForm'
 
 const RankingCreateForm = () => {
+  
   const dispatch = useDispatch()
 
   const [title, setTitle] = useState(''),
@@ -38,7 +40,7 @@ const RankingCreateForm = () => {
       setItem(confirmItem)
     }
   },[id])
-
+  
   return (
     <div>
       <h1>
@@ -63,12 +65,7 @@ const RankingCreateForm = () => {
       </div>
       <br />
       <div>
-        <TextField
-          label={'Item'}
-          value={item}
-          onChange={inputItem}
-          type={'text'}
-        />
+        <RankingItemForm />
       </div>
       <br />
       <div>
@@ -86,6 +83,7 @@ const RankingCreateForm = () => {
       </div>
     </div>
   )
+
 }
 
 export default RankingCreateForm
