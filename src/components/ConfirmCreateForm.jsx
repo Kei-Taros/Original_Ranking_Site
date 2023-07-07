@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
@@ -15,17 +15,11 @@ const ConfirmCreateForm = (props) => {
   const confirmExplan = getExplan(selector)
   const confirmItem = getItem(selector)
 
-  /*
-  window.addEventListener('load', () => {
-    console.log('relod2')
-    const perfEntries = performance.getEntriesByType("navigation");
-    if (perfEntries[0].type === 'reload') {
-      console.log('relod')
+  useEffect(() => {
+    if (confirmTitle === '' || confirmExplan === '') {
       dispatch(push('/ranking/createform'))
     }
-  });
-  */
-
+  }, [])
 
   return (
     <div>

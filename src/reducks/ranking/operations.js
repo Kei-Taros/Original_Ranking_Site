@@ -7,8 +7,12 @@ const rankingRef = db.collection('ranking')
 
 export const createRanking = (title, explan, item, id) => {
   return async (dispatch) => {
-    if (title === '' || explan === '' || item === '') {
+    if (title === '' || explan === '') {
       alert('Enter the required items.')
+      return false
+    }
+    if (item.length < 2) {
+      alert('Two or more required.')
       return false
     }
 
