@@ -9,7 +9,6 @@ import { getExplan, getId, getItem, getTitle } from '../reducks/ranking/selector
 import { useFieldArray, useForm } from 'react-hook-form'
 
 const RankingCreateForm = () => {
-
   const dispatch = useDispatch()
 
   const selector = useSelector((state) => state)
@@ -21,7 +20,7 @@ const RankingCreateForm = () => {
 
   let initialTitle = ''
   let initialExplan = ''
-  let initialItemValue = ''
+  let initialItemValue = []
 
   if (confirmTitle !== '' && confirmExplan !== '' && confirmItemCount !== 0) {
     initialTitle = confirmTitle
@@ -36,7 +35,7 @@ const RankingCreateForm = () => {
       items: [{ itemValue: initialItemValue[0] }]
     }
   })
-  
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'items'
@@ -132,7 +131,6 @@ const RankingCreateForm = () => {
             REDUCE
           </Button>
         </div>
-
         <br />
         <div>
           <Button type='submit' variant="contained">
