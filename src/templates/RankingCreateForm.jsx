@@ -25,18 +25,18 @@ const RankingCreateForm = () => {
   if (confirmTitle !== '' && confirmExplan !== '' && confirmItemCount !== 0) {
     initialTitle = confirmTitle
     initialExplan = confirmExplan
-    initialItemValue = confirmItem
+    initialItemValue = confirmItem[0].itemValue
   }
 
   const { register, handleSubmit, reset, control } = useForm({
     defaultValues: {
       title: initialTitle,
       explan: initialExplan,
-      items: [{ itemValue: initialItemValue[0] }]
+      items: [{ itemValue: initialItemValue, itemVote: 0 }]
     }
   })
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     control,
     name: 'items'
   })
@@ -48,7 +48,7 @@ const RankingCreateForm = () => {
     const createItemList = [];
     data.items.forEach((createItem, index) => {
       if (createItem.itemValue !== '') {
-        createItemList.push(createItem.itemValue)
+        createItemList.push(createItem)
       }
     })
     setFixFlag(false)
@@ -72,13 +72,13 @@ const RankingCreateForm = () => {
   useEffect(() => {
     if (count === 0 && confirmItemCount === 0) {
       for (let i = 0; i < 1; i++) {
-        append({ itemValue: '' })
+        append({ itemValue: '', itemVote: 0 })
         countUp()
       }
     }
     else if (fixFlag === false) {
       for (let i = 1; confirmItemCount > i; i++) {
-        append({ itemValue: initialItemValue[i] })
+        append({ itemValue: confirmItem[i].itemValue, itemVote: 0 })
       }
       setCount(ItemCout)
       setFixFlag(true)

@@ -16,12 +16,16 @@ const ConfirmCreateForm = (props) => {
   const confirmExplan = getExplan(selector)
   const confirmItem = getItem(selector)
   const confirmItemCount = confirmItem.length
+  let confirmInitialItem = []
+  if (confirmItemCount !== 0) {
+    confirmInitialItem = confirmItem[0].itemValue
+  }
 
   const { register, handleSubmit, reset, control } = useForm({
     defaultValues: {
       title: confirmTitle,
       explan: confirmExplan,
-      items: [{ itemValue: confirmItem[0] }]
+      items: [{ itemValue: confirmInitialItem }]
     }
   })
 
@@ -31,15 +35,15 @@ const ConfirmCreateForm = (props) => {
   })
 
   const onSubmit = () => {
-    setFixFlag(false)
     dispatch(saveRanking())
+    setFixFlag(false)
   }
 
   const [fixFlag, setFixFlag] = useState(false)
   useEffect(() => {
     if (fixFlag === false) {
       for (let i = 1; confirmItemCount > i; i++) {
-        append({ itemValue: confirmItem[i] })
+        append({ itemValue: confirmItem[i].itemValue })
       }
       setFixFlag(true)
     }
@@ -88,6 +92,15 @@ const ConfirmCreateForm = (props) => {
         <div>
           <Button type='submit' variant="contained">
             SAVE
+          </Button>
+        </div>
+        <br />
+        <div>
+          <Button
+            variant="contained"
+            onClick={() => dispatch(push('/ranking/createform'))}
+          >
+            FIX
           </Button>
         </div>
       </form>
