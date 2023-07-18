@@ -29,6 +29,9 @@ const Home = () => {
       <div>
         CreateForm to <Link to={`/ranking/createform`}>this.</Link>
       </div>
+      <div>
+        RankingList to <Link to={`/ranking/list`}>this.</Link>
+      </div>
       <br />
       <div>
         <div><b>Login Info</b></div>

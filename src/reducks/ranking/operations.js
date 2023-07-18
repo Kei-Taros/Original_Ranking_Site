@@ -19,7 +19,8 @@ export const createRanking = (title, explan, item, id) => {
     const rankingData = {
       title: title,
       explan: explan,
-      item: item
+      item: item,
+      totalVote: 0
     }
 
     if (id === '') {

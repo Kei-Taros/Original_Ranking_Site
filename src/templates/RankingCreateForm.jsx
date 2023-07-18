@@ -36,7 +36,7 @@ const RankingCreateForm = () => {
     }
   })
 
-  const { fields, append, remove, update } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: 'items'
   })
@@ -102,6 +102,8 @@ const RankingCreateForm = () => {
           <TextField
             inputProps={{ ...register('explan') }}
             placeholder='Explan'
+            multiline
+            rows={3}
           />
         </div>
         <br />

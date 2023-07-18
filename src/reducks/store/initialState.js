@@ -9,7 +9,8 @@ const initialState = {
     title: '',
     explan: '',
     item: [],
-    id: ''
+    id: '',
+    totalVote: 0
   }
 }
 
