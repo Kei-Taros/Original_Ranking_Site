@@ -45,14 +45,16 @@ const RankingCreateForm = () => {
     const title = data.title
     const explan = data.explan
 
-    const createItemList = [];
+    const createItemList = []
+    const duplicateItemValue = []
     data.items.forEach((createItem, index) => {
       if (createItem.itemValue !== '') {
         createItemList.push(createItem)
+        duplicateItemValue.push(createItem.itemValue)
       }
     })
+    dispatch(createRanking(title, explan, createItemList, id, duplicateItemValue))
     setFixFlag(false)
-    dispatch(createRanking(title, explan, createItemList, id))
     //reset();
   }
 
@@ -103,7 +105,7 @@ const RankingCreateForm = () => {
             inputProps={{ ...register('explan') }}
             placeholder='Explan'
             multiline
-            rows={3}
+            minRows={3}
           />
         </div>
         <br />

@@ -10,6 +10,10 @@ const RankingItemDetail = () => {
   const [title, setTitle] = useState(''),
         [explan, setExplan] = useState(''),
         [item,setItem]=useState([])
+
+  const voteProcess = () => {
+    alert('vote')
+  }
   
   useEffect(() => {
     db.collection('ranking').doc(id).get()
@@ -29,8 +33,10 @@ const RankingItemDetail = () => {
       </div>
       <div>
         {item.map((itemData) => (
-          <li key={itemData.length}>
+          <li key={itemData.itemValue}>
             {itemData.itemValue}
+            &nbsp;
+            <button onClick={voteProcess}>vote</button>
           </li>
         ))}
       </div>

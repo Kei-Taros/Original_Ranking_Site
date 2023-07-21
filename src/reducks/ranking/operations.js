@@ -5,7 +5,7 @@ import { createRankingAction, resetRankingAction } from './action'
 
 const rankingRef = db.collection('ranking')
 
-export const createRanking = (title, explan, item, id) => {
+export const createRanking = (title, explan, item, id, duplicateItemValue) => {
   return async (dispatch) => {
     if (title === '' || explan === '') {
       alert('Enter the required items.')
@@ -13,6 +13,14 @@ export const createRanking = (title, explan, item, id) => {
     }
     if (item.length < 2) {
       alert('Two or more required.')
+      return false
+    }
+    let duplicateCheckList = []
+    duplicateCheckList = duplicateItemValue.filter((x, i, self) => {
+      return self.indexOf(x) === i && i !== self.lastIndexOf(x)
+    })
+    if (duplicateCheckList.length !== 0) {
+      alert('Duplicate ranking items.\n→' + duplicateCheckList)
       return false
     }
 

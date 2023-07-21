@@ -11,7 +11,6 @@ const RankingItemList = () => {
 
   const [rankingItem, setRankingItem] = useState([])
 
-  
   useEffect(() => {
     db.collection('ranking').get()
       .then(snapshots => {
@@ -20,7 +19,8 @@ const RankingItemList = () => {
           const data = snapshot.data()
           dataList.push({
             id: data.id,
-            title: data.title
+            title: data.title,
+            vote: data.totalVote
           })
         })
         setRankingItem(dataList)
@@ -36,7 +36,9 @@ const RankingItemList = () => {
       {rankingItem.map((item) => (
         <li key={item.id}>
           <Link to={`/ranking/list/${item.id}`}>
-            {item.title}
+            Title:[{item.title}]
+            &nbsp;
+            Total Votes:[{item.vote}]
           </Link>
         </li>
       ))}
