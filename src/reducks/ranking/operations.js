@@ -63,3 +63,22 @@ export const saveRanking = () => {
       })
   }
 }
+
+export const voteProcess = (id, index) => {
+  return async (dispatch, getState) => {
+    const snapshot = await rankingRef.doc(id).get()
+    const updateItem = snapshot.data().item
+    const keyItem = updateItem[index].itemValue
+    for (const item of updateItem) {
+      if (item.itemValue === keyItem) {
+        item.itemVote = ++item.itemVote
+        break
+      }
+    }
+    
+    await rankingRef.doc(id).update({
+      item: updateItem
+    })
+  }
+}
+

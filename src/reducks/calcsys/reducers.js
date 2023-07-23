@@ -10,17 +10,7 @@ const initialState = {
 
 const counterReducer = (state = initialState.count, action) => {
   switch (action.type) {
-    case Act.COUNTER_A:
-      return {
-        ...state,
-        ...action.payload
-      }
-    case Act.COUNTER_B:
-      return {
-        ...state,
-        ...action.payload
-      }
-    case Act.COUNTER_ADD:
+    case Act.COUNTER_CHENGE:
       return {
         ...state,
         ...action.payload

@@ -124,7 +124,7 @@ const RankingCreateForm = () => {
           <Button
             type='button'
             variant='outlined'
-            onClick={() => [append({ taskValue: '' }), countUp()]}
+            onClick={() => [append({ itemValue: '', itemVote: 0 }), countUp()]}
           >
             ADD
           </Button>

@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { db, FirebaseTimestamp } from '../firebase'
+import { useDispatch } from 'react-redux'
+import { db } from '../firebase'
 import {useParams} from 'react-router-dom/cjs/react-router-dom'
+import { voteProcess } from '../reducks/ranking/operations'
 
 const RankingItemDetail = () => {
+  const dispatch = useDispatch()
   const id = useParams().id
-  console.log(id)
 
   const [title, setTitle] = useState(''),
         [explan, setExplan] = useState(''),
-        [item,setItem]=useState([])
+        [item, setItem] = useState([]),
+        [btnDisable, setBtnDisable] = useState(false)
 
-  const voteProcess = () => {
-    alert('vote')
-  }
-  
   useEffect(() => {
     db.collection('ranking').doc(id).get()
       .then(getData => {
@@ -23,7 +21,7 @@ const RankingItemDetail = () => {
         setExplan(rankingData.explan)
         setItem(rankingData.item)
       })
-  },[])
+  }, [item])
 
   return (
     <>
@@ -32,11 +30,18 @@ const RankingItemDetail = () => {
         Explanation:{explan}
       </div>
       <div>
-        {item.map((itemData) => (
+        {item.map((itemData,index) => (
           <li key={itemData.itemValue}>
-            {itemData.itemValue}
+            {itemData.itemValue}:[{itemData.itemVote}]
             &nbsp;
-            <button onClick={voteProcess}>vote</button>
+            <button
+              disabled={btnDisable}
+              onClick={() => {
+                dispatch(voteProcess(id, index))
+              }}
+            >
+              VOTE
+            </button>
           </li>
         ))}
       </div>
