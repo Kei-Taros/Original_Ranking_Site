@@ -1,7 +1,7 @@
-export const RANKING_CREATE = "RANKING_CREATE";
-export const createRankingAction = (rankingData) => {
+export const RANKING_UPDATE = "RANKING_UPDATE";
+export const updateRankingAction = (rankingData) => {
   return {
-    type: "RANKING_CREATE",
+    type: "RANKING_UPDATE",
     payload: rankingData
   }
 }

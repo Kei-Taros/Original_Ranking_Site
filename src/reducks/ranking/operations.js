@@ -1,7 +1,7 @@
 import { push } from 'connected-react-router'
 import { db, FirebaseTimestamp } from '../../firebase/index'
 import initialState from '../store/initialState'
-import { createRankingAction, resetRankingAction } from './action'
+import { updateRankingAction, resetRankingAction } from './action'
 
 const rankingRef = db.collection('ranking')
 
@@ -37,7 +37,7 @@ export const createRanking = (title, explan, item, id, duplicateItemValue) => {
       rankingData.id = id
     }
 
-    dispatch(createRankingAction(rankingData))
+    dispatch(updateRankingAction(rankingData))
     dispatch(push('/ranking/confirmform'))
   }
 }
@@ -67,6 +67,7 @@ export const saveRanking = () => {
 export const voteProcess = (id, index) => {
   return async (dispatch, getState) => {
     const snapshot = await rankingRef.doc(id).get()
+    
     const updateItem = snapshot.data().item
     const keyItem = updateItem[index].itemValue
     for (const item of updateItem) {
@@ -79,6 +80,12 @@ export const voteProcess = (id, index) => {
     await rankingRef.doc(id).update({
       item: updateItem
     })
+      .then(() => {
+        const state = getState()
+        const rankigData = state.ranking
+        rankigData.item = updateItem
+        dispatch(updateRankingAction(rankigData))
+      })
   }
 }
 

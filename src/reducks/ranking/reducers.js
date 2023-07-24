@@ -3,7 +3,7 @@ import * as Act from './action';
 
 const rankingReducer = (state = initialState.ranking, action) => {
   switch (action.type) {
-    case Act.RANKING_CREATE:
+    case Act.RANKING_UPDATE:
       return {
         ...state,
         ...action.payload
