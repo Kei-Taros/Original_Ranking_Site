@@ -21,3 +21,8 @@ export const getItem = createSelector(
   [rankingSelector],
   state => state.item
 )
+
+export const getTotalVote = createSelector(
+  [rankingSelector],
+  state => state.totalVote
+)

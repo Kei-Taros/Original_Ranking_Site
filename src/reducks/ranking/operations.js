@@ -67,7 +67,6 @@ export const saveRanking = () => {
 export const voteProcess = (id, index) => {
   return async (dispatch, getState) => {
     const snapshot = await rankingRef.doc(id).get()
-    
     const updateItem = snapshot.data().item
     const keyItem = updateItem[index].itemValue
     for (const item of updateItem) {
@@ -76,14 +75,20 @@ export const voteProcess = (id, index) => {
         break
       }
     }
-    
+
+    let updateTotalVote = updateItem.reduce((sum, item) => {
+      return sum + item.itemVote
+    }, 0)
+
     await rankingRef.doc(id).update({
-      item: updateItem
+      item: updateItem,
+      totalVote: updateTotalVote
     })
       .then(() => {
         const state = getState()
         const rankigData = state.ranking
         rankigData.item = updateItem
+        rankigData.totalVote = updateTotalVote
         dispatch(updateRankingAction(rankigData))
       })
   }

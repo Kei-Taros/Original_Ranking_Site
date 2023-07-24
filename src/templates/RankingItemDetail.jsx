@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { db } from '../firebase'
 import {useParams} from 'react-router-dom/cjs/react-router-dom'
 import { voteProcess } from '../reducks/ranking/operations'
-import { getItem } from '../reducks/ranking/selectors'
+import { getItem, getTotalVote } from '../reducks/ranking/selectors'
 import { updateRankingAction } from '../reducks/ranking/action'
 
 const RankingItemDetail = () => {
@@ -14,6 +14,7 @@ const RankingItemDetail = () => {
   const [title, setTitle] = useState(''),
         [explan, setExplan] = useState(''),
         [item, setItem] = useState([]),
+        [totalVote, setTotalVote] = useState(0),
         [btnDisable, setBtnDisable] = useState(false)
 
   useEffect(() => {
@@ -23,6 +24,7 @@ const RankingItemDetail = () => {
         setTitle(rankingData.title)
         setExplan(rankingData.explan)
         setItem(rankingData.item)
+        setTotalVote(rankingData.totalVote)
         dispatch(updateRankingAction(rankingData))
       })
   }, [])
@@ -44,6 +46,7 @@ const RankingItemDetail = () => {
                 dispatch(voteProcess(id, index))
                   .then(() => {
                     setItem(getItem(selector))
+                    setTotalVote(getTotalVote(selector))
                     //setBtnDisable(true)
                   })
                 }}
@@ -55,7 +58,7 @@ const RankingItemDetail = () => {
       </div>
       <br />
       <div>
-        Total Votes:[{/*totalVote*/}]
+        Total Votes:[{totalVote}]
       </div>
     </>
   )
