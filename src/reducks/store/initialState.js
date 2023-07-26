@@ -3,7 +3,8 @@ const initialState = {
     isSignedIn: false,
     type: '',
     uid: '',
-    username: ''
+    username: '',
+    voteRanking: []
   },
   ranking: {
     title: '',

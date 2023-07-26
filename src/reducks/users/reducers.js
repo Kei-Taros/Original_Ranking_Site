@@ -3,12 +3,12 @@ import * as Act from './action';
 
 export const usersReducer = (state = initialState.users, action) => {
   switch (action.type) {
-    case Act.SIGN_IN:
+    case Act.SIGNIN_UPDATE:
       return {
         ...state,
         ...action.payload
       }
-    case Act.SIGN_OUT:
+    case Act.SIGNOUT:
       return {
         ...action.payload
       }

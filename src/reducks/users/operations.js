@@ -1,6 +1,9 @@
 import { push } from 'connected-react-router';
 import { auth, db, FirebaseTimestamp } from '../../firebase/index';
-import { signInAction, signOutAction } from './action';
+import { counterAction_A } from '../calcsys/action';
+import { signInAction, signOutAction, updateVoteAction } from './action';
+
+const usersRef = db.collection('userData')
 
 export const signUpSystem = (username, email, password, confirmPassword, invitationCode) => {
   return async (dispatch) => {
@@ -28,6 +31,7 @@ export const signUpSystem = (username, email, password, confirmPassword, invitat
               email: email,
               uid: uid,
               username: username,
+              voteRanking: [],
               type: 'special_user'
             }
           }
@@ -37,11 +41,12 @@ export const signUpSystem = (username, email, password, confirmPassword, invitat
               email: email,
               uid: uid,
               username: username,
+              voteRanking: [],
               type: 'normal_user'
             }
           }
 
-          db.collection('userData').doc(uid).set(userInitialData)
+          usersRef.doc(uid).set(userInitialData)
             .then(() => {
               dispatch(push('/'))
             })
@@ -62,14 +67,15 @@ export const signInSystem = (email, password) => {
 
         if (user) {
           const uid = user.uid
-          db.collection('userData').doc(uid).get()
+          usersRef.doc(uid).get()
             .then(getUser => {
               const udata = getUser.data()
 
               dispatch(signInAction({
                 type: udata.type,
                 uid: uid,
-                username: udata.username
+                username: udata.username,
+                voteRanking: udata.voteRanking
               }))
               dispatch(push('/'));
             })
@@ -95,14 +101,15 @@ export const listenAuthState = () => {
     auth.onAuthStateChanged(user => {
       if (user) {
         const uid = user.uid
-        db.collection('userData').doc(uid).get()
+        usersRef.doc(uid).get()
           .then(snapshot => {
             const udata = snapshot.data()
 
             dispatch(signInAction({
               type: udata.type,
               uid: uid,
-              username: udata.username
+              username: udata.username,
+              voteRanking: udata.voteRanking
             }))
           })
       }
@@ -130,3 +137,35 @@ export const pwResetSystem = (email) => {
       })
   }
 }
+
+export const updateVoteRankig = (id) => {
+  return async (dispatch, getState) => {
+    const state = getState()
+    const usersData = state.users
+    const uid = usersData.uid
+    const voteRanking = usersData.voteRanking
+    console.log(usersData)
+
+    let updateFlag = true
+    for (const voteData of voteRanking) {
+      if (voteData.voteId === id) {
+        voteCount: ++voteData.voteCount
+        updateFlag = false
+        break
+      }
+    }
+    if (updateFlag) {
+      const updateVoteRanking = ({
+        voteId: id,
+        voteCount: 1
+      })
+      voteRanking.push(updateVoteRanking)
+    }
+
+    await usersRef.doc(uid).update(usersData)
+      .then(() => {
+        dispatch(updateVoteAction(usersData))
+      })
+  }
+}
+

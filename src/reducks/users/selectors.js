@@ -6,3 +6,8 @@ export const getIsSignedIn = createSelector(
   [usersSelector],
   state => state.isSignedIn
 )
+
+export const getVoteRanking = createSelector(
+  [usersSelector],
+  state => state.voteRanking
+)

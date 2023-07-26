@@ -1,25 +1,36 @@
-export const SIGN_IN = "SIGN_IN";
+export const SIGNIN_UPDATE = "SIGNIN_UPDATE";
 export const signInAction = (state) => {
   return {
-    type: "SIGN_IN",
+    type: "SIGNIN_UPDATE",
     payload: {
       isSignedIn: true,
       type: state.type,
       uid: state.uid,
-      username: state.username
+      username: state.username,
+      voteRanking: state.voteRanking
     }
   }
 }
 
-export const SIGN_OUT = "SIGN_OUT";
+export const updateVoteAction = (state) => {
+  return {
+    type: "SIGNIN_UPDATE",
+    payload: {
+      voteRanking: state.voteRanking
+    }
+  }
+}
+
+export const SIGNOUT = "SIGNOUT";
 export const signOutAction = (state) => {
   return {
-    type: "SIGN_OUT",
+    type: "SIGNOUT",
     payload: {
       isSignedIn: false,
       type: '',
       uid: '',
-      username: ''
+      username: '',
+      voteRanking: []
     }
   }
 }

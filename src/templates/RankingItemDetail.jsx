@@ -5,6 +5,8 @@ import {useParams} from 'react-router-dom/cjs/react-router-dom'
 import { voteProcess } from '../reducks/ranking/operations'
 import { getItem, getTotalVote } from '../reducks/ranking/selectors'
 import { updateRankingAction } from '../reducks/ranking/action'
+import { updateVoteRankig } from '../reducks/users/operations'
+import { getVoteRanking } from '../reducks/users/selectors'
 
 const RankingItemDetail = () => {
   const dispatch = useDispatch()
@@ -29,6 +31,15 @@ const RankingItemDetail = () => {
       })
   }, [])
 
+  useEffect(() => {
+    const voteRankingData = getVoteRanking(selector)
+    for (const voteData of voteRankingData) {
+      if (voteData.voteId === id) {
+        setBtnDisable(true)
+      }
+    }
+  }, [])
+
   return (
     <>
       <h1>{title}</h1>
@@ -47,7 +58,10 @@ const RankingItemDetail = () => {
                   .then(() => {
                     setItem(getItem(selector))
                     setTotalVote(getTotalVote(selector))
-                    //setBtnDisable(true)
+                    dispatch(updateVoteRankig(id))
+                      .then(() => {
+                        setBtnDisable(true)
+                      })
                   })
                 }}
             >
