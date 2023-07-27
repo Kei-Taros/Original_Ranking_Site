@@ -144,7 +144,6 @@ export const updateVoteRankig = (id) => {
     const usersData = state.users
     const uid = usersData.uid
     const voteRanking = usersData.voteRanking
-    console.log(usersData)
 
     let updateFlag = true
     for (const voteData of voteRanking) {

@@ -1,12 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { resetRankigProcess } from '../reducks/ranking/operations'
 import { signOutSystem } from '../reducks/users/operations'
 
 const Home = () => {
   const dispatch = useDispatch()
   const username = useSelector((state) => state.users.username)
   const uid = useSelector((state) => state.users.uid)
+
+  useEffect(() => {
+    dispatch(resetRankigProcess())
+  })
   
   return (
     <div>
@@ -20,7 +25,8 @@ const Home = () => {
         SignOut to <Link
           to={`/signin`}
           onClick={() => {
-            dispatch(signOutSystem());
+            dispatch(resetRankigProcess())
+            dispatch(signOutSystem())
           }}
         >
           this.

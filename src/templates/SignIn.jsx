@@ -17,7 +17,7 @@ const SignIn = () => {
   const inputPassword = useCallback((event) => {
     setPassword(event.target.value)
   }, [setEmail])
-
+  
   return (
     <div>
       <h1>
@@ -46,7 +46,7 @@ const SignIn = () => {
           variant="outlined"
           label={'Sign In'}
           onClick={() => {
-            dispatch(signInSystem(email, password));
+            dispatch(signInSystem(email, password))
           }}
         >
           Sign In

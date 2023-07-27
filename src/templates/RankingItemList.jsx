@@ -9,7 +9,17 @@ const RankingItemList = () => {
   const dispatch = useDispatch()
   const selector = useSelector((state) => state)
 
-  const [rankingItem, setRankingItem] = useState([])
+  const [rankingItem, setRankingItem] = useState([]),
+        [mostRecentItem, setMostRecentItem] = useState([]),
+        [voteOrderItem, setVoteOrderItem] = useState([])
+
+  const mostRecentBtn = () => {
+      setRankingItem(mostRecentItem)
+  }
+
+  const voteOrderBtn = () => {
+    setRankingItem(voteOrderItem)
+  }
 
   useEffect(() => {
     db.collection('ranking').get()
@@ -23,16 +33,33 @@ const RankingItemList = () => {
             vote: data.totalVote
           })
         })
-        setRankingItem(dataList)
+
+        if (voteOrderItem.length === 0) {
+          setRankingItem(dataList)
+          setMostRecentItem(dataList.slice())
+          const adjustItem = dataList.slice()
+          adjustItem.sort((current, next) =>
+            next.vote - current.vote
+          )
+          setVoteOrderItem(adjustItem)
+        }
       })
   }, [])
-
 
   return (
     <>
       <h1>
         Item List
       </h1>
+      <div>
+        <button onClick={mostRecentBtn}>
+          Most Recent
+        </button>
+        &nbsp;
+        <button onClick={voteOrderBtn}>
+          Vote Order
+        </button>
+      </div>
       {rankingItem.map((item) => (
         <li key={item.id}>
           <Link to={`/ranking/list/${item.id}`}>

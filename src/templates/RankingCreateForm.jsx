@@ -12,29 +12,27 @@ const RankingCreateForm = () => {
   const dispatch = useDispatch()
 
   const selector = useSelector((state) => state)
-  const id = getId(selector)
+  const rankingId = getId(selector)
   const confirmTitle = getTitle(selector)
   const confirmExplan = getExplan(selector)
   const confirmItem = getItem(selector)
   const confirmItemCount = confirmItem.length
-
-  let initialTitle = ''
-  let initialExplan = ''
-  let initialItemValue = []
-
+ 
+  let defaultValues = {
+    title: '',
+    explan: '',
+    items: [{ itemValue: '', itemVote: 0 }]
+  }
+  
   if (confirmTitle !== '' && confirmExplan !== '' && confirmItemCount !== 0) {
-    initialTitle = confirmTitle
-    initialExplan = confirmExplan
-    initialItemValue = confirmItem[0].itemValue
+    defaultValues = {
+      title: confirmTitle,
+      explan: confirmExplan,
+      items: [{ itemValue: confirmItem[0].itemValue, itemVote: 0 }]
+    }
   }
 
-  const { register, handleSubmit, reset, control } = useForm({
-    defaultValues: {
-      title: initialTitle,
-      explan: initialExplan,
-      items: [{ itemValue: initialItemValue, itemVote: 0 }]
-    }
-  })
+  const { register, handleSubmit, control } = useForm({ defaultValues })
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -47,15 +45,14 @@ const RankingCreateForm = () => {
 
     const createItemList = []
     const duplicateItemValue = []
-    data.items.forEach((createItem, index) => {
+    data.items.forEach((createItem) => {
       if (createItem.itemValue !== '') {
         createItemList.push(createItem)
         duplicateItemValue.push(createItem.itemValue)
       }
     })
-    dispatch(createRanking(title, explan, createItemList, id, duplicateItemValue))
+    dispatch(createRanking(title, explan, createItemList, rankingId, duplicateItemValue))
     setFixFlag(false)
-    //reset();
   }
 
   const [count, setCount] = useState(0)

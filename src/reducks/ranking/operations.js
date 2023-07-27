@@ -94,3 +94,9 @@ export const voteProcess = (id, index) => {
   }
 }
 
+export const resetRankigProcess = () => {
+  return async (dispatch) => {
+    const resetData = initialState.ranking
+    dispatch(resetRankingAction(resetData))
+  }
+}
