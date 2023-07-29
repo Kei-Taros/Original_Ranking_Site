@@ -17,7 +17,7 @@ const RankingCreateForm = () => {
   const confirmExplan = getExplan(selector)
   const confirmItem = getItem(selector)
   const confirmItemCount = confirmItem.length
- 
+
   let defaultValues = {
     title: '',
     explan: '',
@@ -28,7 +28,7 @@ const RankingCreateForm = () => {
     defaultValues = {
       title: confirmTitle,
       explan: confirmExplan,
-      items: [{ itemValue: confirmItem[0].itemValue, itemVote: 0 }]
+      items: [{ itemValue: confirmItem[0].itemValue, itemVote: confirmItem[0].itemVote }]
     }
   }
 
@@ -77,7 +77,7 @@ const RankingCreateForm = () => {
     }
     else if (fixFlag === false) {
       for (let i = 1; confirmItemCount > i; i++) {
-        append({ itemValue: confirmItem[i].itemValue, itemVote: 0 })
+        append({ itemValue: confirmItem[i].itemValue, itemVote: confirmItem[i].itemVote })
       }
       setCount(ItemCout)
       setFixFlag(true)

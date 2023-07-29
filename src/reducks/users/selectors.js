@@ -11,3 +11,8 @@ export const getVoteRanking = createSelector(
   [usersSelector],
   state => state.voteRanking
 )
+
+export const getUid = createSelector(
+  [usersSelector],
+  state => state.uid
+)

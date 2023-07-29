@@ -6,7 +6,9 @@ import { updateRankingAction, resetRankingAction } from './action'
 const rankingRef = db.collection('ranking')
 
 export const createRanking = (title, explan, item, id, duplicateItemValue) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const state = getState()
+
     if (title === '' || explan === '') {
       alert('Enter the required items.')
       return false
@@ -31,6 +33,58 @@ export const createRanking = (title, explan, item, id, duplicateItemValue) => {
       totalVote: 0
     }
 
+    let votedConfirmFlag = false
+    for (const itemData of item) {
+      if (itemData.itemVote !== 0) {
+        votedConfirmFlag = true
+        break
+      }
+    }
+    if (votedConfirmFlag) {
+      const rankingState = state.ranking
+      const votedItem = rankingState.item
+      const votedItemCount = votedItem.length
+      const editingItem = structuredClone(item)
+      const editingItemCount = editingItem.length
+      let adjustCount = 0
+      let changedItem = []
+
+      if (votedItemCount > editingItemCount) {
+        adjustCount = editingItemCount
+        votedItem.length = adjustCount
+      }
+      else if (votedItemCount < editingItemCount) {
+        adjustCount = votedItemCount
+        editingItem.length = adjustCount
+      }
+      else {
+        adjustCount = editingItemCount
+      }
+
+      for (let i = 0; i < adjustCount; i++) {
+        if (votedItem[i].itemValue !== editingItem[i].itemValue) {
+          if (editingItem[i].itemVote !== 0) {
+            editingItem[i].itemVote = 0
+            changedItem.push(editingItem[i].itemValue)
+          }
+        }
+      }
+
+      if (changedItem.length !== 0) {
+        const confirmFlag = window
+          .confirm('If you edit a voted item, the vote is lost.\n→' + changedItem)
+
+        if (confirmFlag) {
+          rankingState.updateVotedItem = editingItem
+        }
+        else {
+          return false
+        }
+      }
+      console.log(votedItem)
+      console.log(editingItem)
+    }
+
     if (id === '') {
       const ref = rankingRef.doc()
       id = ref.id
@@ -47,8 +101,18 @@ export const saveRanking = () => {
     const state = getState()
     const rankigState = state.ranking
 
+    const uid = state.users.uid
+    rankigState.createrUid = uid
     const timestamp = FirebaseTimestamp.now()
     rankigState.created_at = timestamp
+    const updateVotedItem = rankigState.updateVotedItem
+    if (updateVotedItem.length !== 0) {
+      rankigState.item = updateVotedItem
+      let updateTotalVote = updateVotedItem.reduce((sum, item) => {
+        return sum + item.itemVote
+      }, 0)
+      rankigState.totalVote = updateTotalVote
+    }
 
     const id = rankigState.id
 

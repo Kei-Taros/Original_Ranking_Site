@@ -11,7 +11,9 @@ const initialState = {
     explan: '',
     item: [],
     id: '',
-    totalVote: 0
+    totalVote: 0,
+    createrUid: '',
+    updateVotedItem: []
   }
 }
 

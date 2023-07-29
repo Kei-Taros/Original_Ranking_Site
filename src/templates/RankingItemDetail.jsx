@@ -6,18 +6,21 @@ import { voteProcess } from '../reducks/ranking/operations'
 import { getItem, getTotalVote } from '../reducks/ranking/selectors'
 import { updateRankingAction } from '../reducks/ranking/action'
 import { updateVoteRankig } from '../reducks/users/operations'
-import { getVoteRanking } from '../reducks/users/selectors'
+import { getUid, getVoteRanking } from '../reducks/users/selectors'
+import { push } from 'connected-react-router'
 
 const RankingItemDetail = () => {
   const dispatch = useDispatch()
   const id = useParams().id
   const selector = useSelector((state) => state)
+  console.log(selector)
 
   const [title, setTitle] = useState(''),
         [explan, setExplan] = useState(''),
         [item, setItem] = useState([]),
         [totalVote, setTotalVote] = useState(0),
-        [btnDisable, setBtnDisable] = useState(false)
+        [btnDisable, setBtnDisable] = useState(false),
+        [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
     db.collection('ranking').doc(id).get()
@@ -27,9 +30,17 @@ const RankingItemDetail = () => {
         setExplan(rankingData.explan)
         setItem(rankingData.item)
         setTotalVote(rankingData.totalVote)
+        createrUserMode(rankingData.createrUid)
         dispatch(updateRankingAction(rankingData))
       })
   }, [])
+
+  const createrUserMode = (createrUid) => {
+    const uid = getUid(selector)
+    if (createrUid === uid) {
+      setIsVisible(true)
+    }
+  }
 
   useEffect(() => {
     const voteRankingData = getVoteRanking(selector)
@@ -73,6 +84,24 @@ const RankingItemDetail = () => {
       <br />
       <div>
         Total Votes:[{totalVote}]
+      </div>
+      <br />
+      <div>
+        {isVisible ? (
+          <button
+            onClick={() => {
+              dispatch(push('/ranking/createform'))
+            }}
+          >
+            Edit
+          </button>
+        ) : ('')}
+        &nbsp;
+        {isVisible ? (
+          <button >
+            Delete
+          </button>
+        ) : ('')}
       </div>
     </>
   )
