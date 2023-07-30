@@ -12,8 +12,11 @@ const initialState = {
     item: [],
     id: '',
     totalVote: 0,
-    createrUid: '',
-    updateVotedItem: []
+    createrUid: ''
+  },
+  tmpRanking: {
+    updateVotedItem: [],
+    votedItemTmpSave: []
   }
 }
 

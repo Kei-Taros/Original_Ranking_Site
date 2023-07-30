@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { db } from '../firebase'
-import {useParams} from 'react-router-dom/cjs/react-router-dom'
-import { voteProcess } from '../reducks/ranking/operations'
+import { useParams } from 'react-router-dom/cjs/react-router-dom'
+import { deleteRanking, voteProcess } from '../reducks/ranking/operations'
 import { getItem, getTotalVote } from '../reducks/ranking/selectors'
 import { updateRankingAction } from '../reducks/ranking/action'
 import { updateVoteRankig } from '../reducks/users/operations'
 import { getUid, getVoteRanking } from '../reducks/users/selectors'
 import { push } from 'connected-react-router'
+import { Link } from 'react-router-dom'
 
 const RankingItemDetail = () => {
   const dispatch = useDispatch()
-  const id = useParams().id
+  const rankingId = useParams().id
   const selector = useSelector((state) => state)
   console.log(selector)
 
@@ -23,7 +24,7 @@ const RankingItemDetail = () => {
         [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    db.collection('ranking').doc(id).get()
+    db.collection('ranking').doc(rankingId).get()
       .then(getData => {
         const rankingData = getData.data()
         setTitle(rankingData.title)
@@ -31,7 +32,11 @@ const RankingItemDetail = () => {
         setItem(rankingData.item)
         setTotalVote(rankingData.totalVote)
         createrUserMode(rankingData.createrUid)
+        votingLimit(rankingData.totalVote)
         dispatch(updateRankingAction(rankingData))
+      })
+      .catch((error) => {
+        dispatch(push('/ranking/list'))
       })
   }, [])
 
@@ -42,14 +47,17 @@ const RankingItemDetail = () => {
     }
   }
 
-  useEffect(() => {
-    const voteRankingData = getVoteRanking(selector)
-    for (const voteData of voteRankingData) {
-      if (voteData.voteId === id) {
+  const votingLimit = (totalVoteCount) => {
+    const voteRankingUserData = getVoteRanking(selector)
+    for (const voteData of voteRankingUserData) {
+      if (voteData.voteId === rankingId) {
         setBtnDisable(true)
       }
     }
-  }, [])
+    if (totalVoteCount === 0) {
+      setBtnDisable(false)
+    }
+  }
 
   return (
     <>
@@ -65,11 +73,11 @@ const RankingItemDetail = () => {
             <button
               disabled={btnDisable}
               onClick={() => {
-                dispatch(voteProcess(id, index))
+                dispatch(voteProcess(rankingId, index))
                   .then(() => {
                     setItem(getItem(selector))
                     setTotalVote(getTotalVote(selector))
-                    dispatch(updateVoteRankig(id))
+                    dispatch(updateVoteRankig(rankingId))
                       .then(() => {
                         setBtnDisable(true)
                       })
@@ -98,10 +106,18 @@ const RankingItemDetail = () => {
         ) : ('')}
         &nbsp;
         {isVisible ? (
-          <button >
+          <button
+            onClick={() => {
+              dispatch(deleteRanking(rankingId))
+            }}
+          >
             Delete
           </button>
         ) : ('')}
+      </div>
+      <br />
+      <div>
+        Home to <Link to={`/`}>this.</Link>
       </div>
     </>
   )

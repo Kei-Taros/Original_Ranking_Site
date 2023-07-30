@@ -6,7 +6,7 @@ import {
 } from 'redux'
 import thunk from 'redux-thunk'//”ñ“¯Šúˆ—‚Ì‚½‚ß‚É’Ç‰Á
 import counterReducer from '../calcsys/reducers'
-import rankingReducer from '../ranking/reducers'
+import { rankingReducer, tmpRankingReducer } from '../ranking/reducers'
 import usersReducer from '../users/reducers'
 
 const createStore = (history) => {
@@ -15,7 +15,8 @@ const createStore = (history) => {
       router: connectRouter(history),
       count: counterReducer,
       users: usersReducer,
-      ranking: rankingReducer
+      ranking: rankingReducer,
+      tmpRanking: tmpRankingReducer
     }),
     applyMiddleware(
       routerMiddleware(history),

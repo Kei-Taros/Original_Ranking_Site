@@ -1,7 +1,7 @@
 import { push } from 'connected-react-router'
 import { db, FirebaseTimestamp } from '../../firebase/index'
 import initialState from '../store/initialState'
-import { updateRankingAction, resetRankingAction } from './action'
+import { updateRankingAction, resetRankingAction, resetTmpRankingAction } from './action'
 
 const rankingRef = db.collection('ranking')
 
@@ -42,7 +42,11 @@ export const createRanking = (title, explan, item, id, duplicateItemValue) => {
     }
     if (votedConfirmFlag) {
       const rankingState = state.ranking
-      const votedItem = rankingState.item
+      const tmpRankingState = state.tmpRanking
+      let votedItem = rankingState.item
+      if (tmpRankingState.votedItemTmpSave.length !== 0) {
+        votedItem = tmpRankingState.votedItemTmpSave
+      }
       const votedItemCount = votedItem.length
       const editingItem = structuredClone(item)
       const editingItemCount = editingItem.length
@@ -75,14 +79,13 @@ export const createRanking = (title, explan, item, id, duplicateItemValue) => {
           .confirm('If you edit a voted item, the vote is lost.\n→' + changedItem)
 
         if (confirmFlag) {
-          rankingState.updateVotedItem = editingItem
+          tmpRankingState.updateVotedItem = structuredClone(editingItem)
+          tmpRankingState.votedItemTmpSave = structuredClone(votedItem)
         }
         else {
           return false
         }
       }
-      console.log(votedItem)
-      console.log(editingItem)
     }
 
     if (id === '') {
@@ -100,12 +103,13 @@ export const saveRanking = () => {
   return async (dispatch, getState) => {
     const state = getState()
     const rankigState = state.ranking
+    const tmpRankingState = state.tmpRanking
 
     const uid = state.users.uid
     rankigState.createrUid = uid
     const timestamp = FirebaseTimestamp.now()
     rankigState.created_at = timestamp
-    const updateVotedItem = rankigState.updateVotedItem
+    const updateVotedItem = tmpRankingState.updateVotedItem
     if (updateVotedItem.length !== 0) {
       rankigState.item = updateVotedItem
       let updateTotalVote = updateVotedItem.reduce((sum, item) => {
@@ -118,8 +122,10 @@ export const saveRanking = () => {
 
     return rankingRef.doc(id).set(rankigState)
       .then(() => {
-        const resetData = initialState.ranking
-        dispatch(resetRankingAction(resetData))
+        const resetRankingData = initialState.ranking
+        dispatch(resetRankingAction(resetRankingData))
+        const resetTmpRankingData = initialState.tmpRanking
+        dispatch(resetTmpRankingAction(resetTmpRankingData))
         dispatch(push('/'))
       })
       .catch((error) => {
@@ -155,6 +161,18 @@ export const voteProcess = (id, index) => {
         rankigData.totalVote = updateTotalVote
         dispatch(updateRankingAction(rankigData))
       })
+  }
+}
+
+export const deleteRanking = (id) => {
+  return async (dispatch, getState) => {
+    const deleteConfirmFlag = window.confirm('Can I remove this ranking?')
+    if (deleteConfirmFlag) {
+      rankingRef.doc(id).delete()
+        .then(() => {
+          dispatch(push('/ranking/list'))
+        })
+    }
   }
 }
 

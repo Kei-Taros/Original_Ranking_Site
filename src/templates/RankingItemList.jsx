@@ -69,6 +69,10 @@ const RankingItemList = () => {
           </Link>
         </li>
       ))}
+      <br />
+      <div>
+        Home to <Link to={`/`}>this.</Link>
+      </div>
     </>
   )
 }
