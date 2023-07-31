@@ -1,6 +1,5 @@
 import { push } from 'connected-react-router';
 import { auth, db, FirebaseTimestamp } from '../../firebase/index';
-import { counterAction_A } from '../calcsys/action';
 import { signInAction, signOutAction, updateVoteAction } from './action';
 
 const usersRef = db.collection('userData')
@@ -82,7 +81,6 @@ export const signInSystem = (email, password) => {
         }
       }
     )
-
   }
 }
 
@@ -144,17 +142,20 @@ export const updateVoteRankig = (id) => {
     const usersData = state.users
     const uid = usersData.uid
     const voteRanking = usersData.voteRanking
+    const rankingData = state.ranking
+    const rankingTitle = rankingData.title
 
-    let updateFlag = true
+    let initialUpdateFlag = true
     for (const voteData of voteRanking) {
       if (voteData.voteId === id) {
         voteCount: ++voteData.voteCount
-        updateFlag = false
+        initialUpdateFlag = false
         break
       }
     }
-    if (updateFlag) {
+    if (initialUpdateFlag) {
       const updateVoteRanking = ({
+        title: rankingTitle,
         voteId: id,
         voteCount: 1
       })
@@ -167,4 +168,3 @@ export const updateVoteRankig = (id) => {
       })
   }
 }
-
