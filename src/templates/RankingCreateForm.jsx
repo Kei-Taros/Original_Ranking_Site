@@ -32,7 +32,7 @@ const RankingCreateForm = () => {
     }
   }
 
-  const { register, handleSubmit, control } = useForm({ defaultValues })
+  const { register, handleSubmit, control, setFocus } = useForm({ defaultValues })
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -71,13 +71,16 @@ const RankingCreateForm = () => {
   useEffect(() => {
     if (count === 0 && confirmItemCount === 0) {
       for (let i = 0; i < 1; i++) {
-        append({ itemValue: '', itemVote: 0 })
+        append({ itemValue: '', itemVote: 0 }, { shouldFocus: false })
         countUp()
       }
+      setFocus('title')
     }
     else if (fixFlag === false) {
       for (let i = 1; confirmItemCount > i; i++) {
-        append({ itemValue: confirmItem[i].itemValue, itemVote: confirmItem[i].itemVote })
+        append({ itemValue: confirmItem[i].itemValue, itemVote: confirmItem[i].itemVote },
+          { shouldFocus: false }
+        )
       }
       setCount(ItemCout)
       setFixFlag(true)

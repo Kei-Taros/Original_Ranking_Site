@@ -15,7 +15,7 @@ export const signUpSystem = (username, email, password, confirmPassword, invitat
       return false
     }
 
-    return auth.createUserWithEmailAndPassword(email, password)
+    auth.createUserWithEmailAndPassword(email, password)
       .then(result => {
         const user = result.user
 
@@ -31,7 +31,7 @@ export const signUpSystem = (username, email, password, confirmPassword, invitat
               uid: uid,
               username: username,
               voteRanking: [],
-              type: 'special_user'
+              spType: true
             }
           }
           else {
@@ -41,7 +41,7 @@ export const signUpSystem = (username, email, password, confirmPassword, invitat
               uid: uid,
               username: username,
               voteRanking: [],
-              type: 'normal_user'
+              spType: false
             }
           }
 
@@ -71,7 +71,7 @@ export const signInSystem = (email, password) => {
               const udata = getUser.data()
 
               dispatch(signInAction({
-                type: udata.type,
+                spType: udata.spType,
                 uid: uid,
                 username: udata.username,
                 voteRanking: udata.voteRanking
@@ -96,19 +96,21 @@ export const signOutSystem = () => {
 
 export const listenAuthState = () => {
   return async (dispatch) => {
-    auth.onAuthStateChanged(user => {
+    await auth.onAuthStateChanged(user => {
       if (user) {
         const uid = user.uid
         usersRef.doc(uid).get()
           .then(snapshot => {
             const udata = snapshot.data()
-
             dispatch(signInAction({
-              type: udata.type,
+              spType: udata.spType,
               uid: uid,
               username: udata.username,
               voteRanking: udata.voteRanking
             }))
+          })
+          .catch((error) => {
+            dispatch(push('/'))
           })
       }
       else {

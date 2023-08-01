@@ -1,7 +1,7 @@
 const initialState = {
   users: {
     isSignedIn: false,
-    type: '',
+    spType: false,
     uid: '',
     username: '',
     voteRanking: []

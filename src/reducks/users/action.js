@@ -4,7 +4,7 @@ export const signInAction = (state) => {
     type: "SIGNIN_UPDATE",
     payload: {
       isSignedIn: true,
-      type: state.type,
+      spType: state.spType,
       uid: state.uid,
       username: state.username,
       voteRanking: state.voteRanking
@@ -27,7 +27,7 @@ export const signOutAction = (state) => {
     type: "SIGNOUT",
     payload: {
       isSignedIn: false,
-      type: '',
+      spType: false,
       uid: '',
       username: '',
       voteRanking: []
